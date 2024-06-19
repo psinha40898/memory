@@ -1,14 +1,21 @@
 import React, { useRef } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { TouchableOpacity, Animated, View, StyleSheet, Text, GestureResponderEvent } from 'react-native';
+import {
+  TouchableOpacity,
+  Animated,
+  View,
+  StyleSheet,
+  Text,
+  GestureResponderEvent,
+} from "react-native";
 
 type IconButtonProps = {
   onPress: (event: GestureResponderEvent) => void;
   color?: string; // color is optional
 };
 const IconButton: React.FC<IconButtonProps> = ({ onPress, color }) => {
-    const animatedValue1 = useRef(new Animated.Value(1)).current;
+  const animatedValue1 = useRef(new Animated.Value(1)).current;
   const animatedValue2 = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = (animatedValue: Animated.Value) => {
@@ -17,7 +24,7 @@ const IconButton: React.FC<IconButtonProps> = ({ onPress, color }) => {
       useNativeDriver: false,
     }).start();
   };
-  
+
   const handlePressOut = (animatedValue: Animated.Value) => {
     Animated.spring(animatedValue, {
       toValue: 1,

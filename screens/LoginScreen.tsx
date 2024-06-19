@@ -1,15 +1,8 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import styles from "../essentialComponents/Style";
 import FlashButton from "../essentialComponents/FlashButton";
 import { useNavigation } from "@react-navigation/native";
-import {
-  Animated,
-  TextInput,
-  Text,
-  View,
-  Platform,
-  Image,
-} from "react-native";
+import { Animated, TextInput, Text, View, Platform, Image } from "react-native";
 import {
   auth,
   createUserWithEmailAndPassword,
@@ -28,7 +21,8 @@ const LoginScreen = () => {
     */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const inputContainerWidth = Platform.OS === "web" ? "25%" : "60%";
   const buttonContainerWidth = Platform.OS === "web" ? "15%" : "40%";
   //factor this out

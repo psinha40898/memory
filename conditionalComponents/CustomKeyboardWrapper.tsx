@@ -1,4 +1,4 @@
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 import styles from "../essentialComponents/Style";
 import {
   KeyboardAvoidingView,
@@ -10,10 +10,12 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 type CustomKeyboardWrapperProps = {
-    children: ReactNode;
-  };
+  children: ReactNode;
+};
 
-  const CustomKeyboardWrapper: React.FC<CustomKeyboardWrapperProps> = ({ children }) => {
+const CustomKeyboardWrapper: React.FC<CustomKeyboardWrapperProps> = ({
+  children,
+}) => {
   if (Platform.OS === "ios") {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -28,10 +30,7 @@ type CustomKeyboardWrapperProps = {
     );
   } else {
     return (
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.container}
-        
-      >
+      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         {children}
       </KeyboardAwareScrollView>
     );
