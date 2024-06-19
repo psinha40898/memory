@@ -4,6 +4,8 @@ import LoginScreen from "./screens/LoginScreen";
 import HomePage from "./screens/HomePage";
 import MatchScreen from "./screens/MatchScreen";
 import RatingScreen from "./screens/RatingScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import SecondRegister from "./screens/SecondRegister";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Auth } from "./Firebase";
@@ -12,6 +14,8 @@ export type RootStackParamList = {
   HomePage: undefined;
   MatchScreen: { match: string; self: string; theme: string; path: string };
   RatingScreen: { ratee: string };
+  RegisterScreen: undefined;
+  SecondRegister: { name: string };
   // Cmen: undefined;
   //<Stack.Screen options={{ headerShown: false}} name="Cmen" component={Cmen} />
 };
@@ -41,6 +45,16 @@ export default function App() {
           options={{ headerShown: false }}
           name="RatingScreen"
           component={RatingScreen}
+        />
+         <Stack.Screen
+          options={{ headerShown: false }}
+          name="RegisterScreen"
+          component={RegisterScreen}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SecondRegister"
+          component={SecondRegister}
         />
       </Stack.Navigator>
     </NavigationContainer>
