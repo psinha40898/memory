@@ -1,75 +1,98 @@
 import React, { useRef } from "react";
-import { Entypo } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   TouchableOpacity,
   Animated,
   View,
   StyleSheet,
-  Text,
   GestureResponderEvent,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { RootStackParamList } from "../App";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 type IconButtonProps = {
   onPress: (event: GestureResponderEvent) => void;
   color?: string; // color is optional
+  active: string;
+  theme: string;
 };
-const IconButton: React.FC<IconButtonProps> = ({ onPress, color }) => {
+
+const IconButton: React.FC<IconButtonProps> = ({ color, active, theme }) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const animatedValue1 = useRef(new Animated.Value(1)).current;
   const animatedValue2 = useRef(new Animated.Value(1)).current;
+  const animatedValue3 = useRef(new Animated.Value(1)).current;
+  const animatedValue4 = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = (animatedValue: Animated.Value) => {
-    Animated.spring(animatedValue, {
-      toValue: 0.8,
-      useNativeDriver: false,
-    }).start();
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(animatedValue, {
+          toValue: 1.2,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animatedValue, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
   };
 
   const handlePressOut = (animatedValue: Animated.Value) => {
-    Animated.spring(animatedValue, {
+    Animated.timing(animatedValue, {
       toValue: 1,
-      useNativeDriver: false,
-    }).start();
-  };
-  const animatedStyle1 = {
-    transform: [{ scale: animatedValue1 }],
+      duration: 300,
+      useNativeDriver: true,
+    }).stop();
   };
 
-  const animatedStyle2 = {
-    transform: [{ scale: animatedValue2 }],
-  };
+  const getColor = (name: string) =>
+    active === name ? theme : color || "white";
 
   return (
     <View style={{ flexDirection: "row" }}>
       <TouchableOpacity
-        onPress={onPress}
         onPressIn={() => handlePressIn(animatedValue1)}
         onPressOut={() => handlePressOut(animatedValue1)}
         activeOpacity={0.7}
+        onPress={() => navigation.navigate("Login")}
       >
-        <Animated.View style={[styles.iconButton, animatedStyle1]}>
-          <MaterialIcons name="home-filled" size={32} color={color} />
+        <Animated.View style={{ transform: [{ scale: animatedValue1 }] }}>
+          <MaterialIcons name="arrow-back" size={32} color="white" />
         </Animated.View>
       </TouchableOpacity>
-
       <TouchableOpacity
-        onPress={onPress}
         onPressIn={() => handlePressIn(animatedValue2)}
         onPressOut={() => handlePressOut(animatedValue2)}
         activeOpacity={0.7}
       >
-        <Animated.View style={[styles.iconButton, animatedStyle2]}>
-          <MaterialIcons name="people" size={32} color={color} />
+        <Animated.View style={{ transform: [{ scale: animatedValue2 }] }}>
+          <MaterialIcons name="home" size={32} color={getColor("home")} />
+        </Animated.View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPressIn={() => handlePressIn(animatedValue3)}
+        onPressOut={() => handlePressOut(animatedValue3)}
+        activeOpacity={0.7}
+      >
+        <Animated.View style={{ transform: [{ scale: animatedValue3 }] }}>
+          <MaterialIcons name="person" size={32} color={getColor("user")} />
         </Animated.View>
       </TouchableOpacity>
     </View>
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   iconButton: {
     // Adjust styling as needed
   },
-};
+});
 
 export default IconButton;

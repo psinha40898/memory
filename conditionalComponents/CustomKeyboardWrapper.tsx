@@ -21,7 +21,7 @@ const CustomKeyboardWrapper: React.FC<CustomKeyboardWrapperProps> = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView
           // IOS debug styles 5/27/2024
-          // style={styles.container}
+          style={styles.container}
           behavior="padding"
         >
           {children}

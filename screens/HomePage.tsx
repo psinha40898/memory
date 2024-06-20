@@ -11,9 +11,12 @@ import {
   Dimensions,
   FlatList,
   Share,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import MyModal from "../essentialComponents/MyModal";
@@ -89,6 +92,8 @@ const HomePage = () => {
     inventory: [],
     saves: [],
   });
+
+  const [loading, setLoading] = useState(true);
 
   //State that changes every time the user picks a different item
   const [stateObject, setState] = useState<StateObject>({
@@ -352,13 +357,14 @@ const HomePage = () => {
     React.useCallback(() => {
       const init = async () => {
         try {
+          setLoading(true);
           //Set active image to placeholder!
-          const storageRef = ref(storage, "items/spinner-of-dots.png");
+          const storageRef = ref(storage, "items/black.webp");
           const URL = await getDownloadURL(storageRef);
           // set default state
           // set default state
           setState({
-            theme: "rgba(216, 151, 158, 1)",
+            theme: "black",
             path: "",
             url: URL,
             info: [""],
@@ -430,6 +436,7 @@ const HomePage = () => {
         });
         // set the state here!// set the state here!
         setInventoryList(inventoryListInfo);
+        setLoading(false);
       }
       if (userObject.saves.length > 0) {
         setMsg(userObject.saves[0]);
@@ -465,176 +472,112 @@ const HomePage = () => {
 
   return (
     <View style={[tStyle.container, { flexDirection: "column" }]}>
-      <View
-        style={[
-          {
-            flex: 1.5,
-            flexDirection: "row",
-            backgroundColor: stateObject ? stateObject.theme : "grey",
-            borderWidth: 0,
-          },
-        ]}
-      >
+      {loading ? (
         <View
-          style={{
-            flex: 1,
-            borderWidth: 0,
-            flexDirection: "row",
-            marginTop: 30,
-            justifyContent: "flex-end",
-            margin: 30,
-          }}
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <View style={{ marginTop: 10 }}>
-            <MaterialIcons
-              name="home-filled"
-              size={32}
-              color={"rgba(253,254,253,255)"}
-            />
-          </View>
-          <View style={{ flexDirection: "column" }}>
-            <Text
-              style={[
-                styles.bold,
-                styles.size3,
-                { color: "rgba(253,254,253,255)" },
-              ]}
-            >
-              memory.
-            </Text>
-            <Text
-              style={[
-                styles.bold,
-                styles.size5,
-                { color: "rgba(253,254,253,255)" },
-              ]}
-            ></Text>
-          </View>
+          <Text
+            style={[
+              styles.bold,
+              styles.size4,
+              { color: "rgba(253,254,253,255)" },
+            ]}
+          >
+            welcome to memory
+          </Text>
+          <Text
+            style={[
+              styles.bold,
+              styles.size3,
+              { color: "rgba(253,254,253,255)", marginBottom: 20 },
+            ]}
+          >
+            {userObject.name}
+          </Text>
+          <ActivityIndicator size="large" />
         </View>
-        {/* {clientName !== '' ?
+      ) : (
+        <View style={{ flex: 1 }}>
+          <View
+            style={[
+              {
+                flex: 1.5,
+                flexDirection: "row",
+                backgroundColor: stateObject ? stateObject.theme : "grey",
+                borderWidth: 0,
+              },
+            ]}
+          >
+            <View
+              style={{
+                flex: 1,
+                borderWidth: 0,
+                flexDirection: "row",
+                marginTop: 30,
+                justifyContent: "flex-end",
+                margin: 30,
+              }}
+            >
+              <View style={{ marginTop: 10 }}>
+                <MaterialIcons
+                  name="home-filled"
+                  size={32}
+                  color={"rgba(253,254,253,255)"}
+                />
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                <Text
+                  style={[
+                    styles.bold,
+                    styles.size3,
+                    { color: "rgba(253,254,253,255)" },
+                  ]}
+                >
+                  memory.
+                </Text>
+
+                <Text
+                  style={[
+                    styles.bold,
+                    styles.size5,
+                    { color: "rgba(253,254,253,255)" },
+                  ]}
+                ></Text>
+              </View>
+            </View>
+            {/* {clientName !== '' ?
     (<Text style={[styles.size3, {fontWeight: '600', color: theme}]}>{clientName}</Text>)
     : null
     } */}
-      </View>
-
-      <View
-        style={[
-          {
-            flex: 10,
-            flexDirection: "column",
-            backgroundColor: "rgba(28,29,35,255)",
-            borderTopColor: "red",
-            borderTopWidth: 0,
-            padding: 10,
-          },
-        ]}
-      >
-        {
-          //start}
-        }
-        <View style={[{ flex: 8, flexDirection: "column", padding: 10 }]}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Animated.View
-              style={[
-                zx.overlay,
-                { padding: 0 },
-                {
-                  opacity: flashValue2.interpolate({
-                    inputRange: [0, 0.25, 0.3, 0.35, 0.5, 0.6, 0.65, 0.75, 1],
-                    outputRange: [0, 0.25, 0.3, 0.35, 0.5, 0.6, 0.65, 0.75, 1],
-                  }),
-                },
-              ]}
-            >
-              <View>
-                <View style={{}}>
-                  <Image
-                    source={{ uri: stateObject.url }}
-                    style={{
-                      width: 100,
-                      height: 100,
-                      borderWidth: 8,
-                      borderTopLeftRadius: 60,
-                      borderTopRightRadius: 60,
-                      borderColor: "rgba(28,29,35,255)",
-                      top: -70,
-                    }}
-                  />
-
-                  <AnimateIcon
-                    style={{
-                      height: 30,
-                      width: 30,
-                      top: -100,
-                      left: 75,
-                      backgroundColor: "rgba(28,29,35,255)",
-                      borderColor: "rgba(56,58,67,255)",
-                      borderWidth: 4,
-                      borderRadius: 20,
-                    }}
-                    iconComponent={
-                      <View
-                        style={{
-                          paddingTop: 2.5,
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <FontAwesome5
-                          name="hat-cowboy-side"
-                          size={12}
-                          color={stateObject ? stateObject.theme : "red"}
-                        />
-                      </View>
-                    }
-                    onPress={editButton}
-                  ></AnimateIcon>
-                </View>
-              </View>
-            </Animated.View>
           </View>
 
-          <MyModal
-            style={{
-              flex: 0.75,
-              alignSelf: "center",
-              justifyContent: "center",
-              borderTopRightRadius: 100,
-              borderBottomRightRadius: 100,
-              borderWidth: 0,
-            }}
-            children={
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <View
-                  style={{
-                    flex: 0.4,
-                    flexDirection: "column",
-                    borderColor: "rgba(28,29,35,255)",
-                    borderRightWidth: 16,
-                    borderRadius: 0,
-                  }}
-                >
-                  <FlatList
-                    data={inventoryList}
-                    //Shopify Flatlist Does not trigger the re render we need sad
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.path}
-                  />
-                </View>
+          <View
+            style={[
+              {
+                flex: 10,
+                flexDirection: "column",
+                backgroundColor: "rgba(28,29,35,255)",
+                borderTopColor: "red",
+                borderTopWidth: 0,
+                padding: 10,
+              },
+            ]}
+          >
+            {
+              //start}
+            }
+            <View style={[{ flex: 8, flexDirection: "column", padding: 10 }]}>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Animated.View
                   style={[
-                    {
-                      flex: 0.6,
-                      flexDirection: "column",
-                      borderWidth: 0,
-                      padding: 20,
-                    },
+                    zx.overlay,
+                    { padding: 0 },
                     {
                       opacity: flashValue2.interpolate({
                         inputRange: [
@@ -647,455 +590,559 @@ const HomePage = () => {
                     },
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.size3,
-                      {
-                        textAlign: "center",
-                        color: stateObject ? stateObject.theme : "black",
-                        padding: 0,
-                        fontWeight: "800",
-                      },
-                    ]}
-                  >
-                    {userObject.name}{" "}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.size4,
-                      { textAlign: "center", color: "white" },
-                    ]}
-                  >
-                    &lt;hero of the day&gt;
-                  </Text>
-                  <Text
-                    style={[
-                      styles.size5,
-                      { textAlign: "left", color: "white" },
-                    ]}
-                  >
-                    level 1
-                  </Text>
-                  <Text
-                    style={[
-                      styles.size5,
-                      { textAlign: "left", color: "white" },
-                    ]}
-                  >
-                    2 items
-                  </Text>
-                  <Text
-                    style={[
-                      styles.size5,
-                      { textAlign: "left", color: "white" },
-                    ]}
-                  >
-                    5 negs
-                  </Text>
-                  <Text
-                    style={[
-                      styles.size3,
-                      { color: "white", padding: 0, fontWeight: "800" },
-                    ]}
-                  >
-                    {stateObject.info}{" "}
-                  </Text>
+                  <View>
+                    <View style={{}}>
+                      <Image
+                        source={{ uri: stateObject.url }}
+                        style={{
+                          width: 100,
+                          height: 100,
+                          borderWidth: 8,
+                          borderTopLeftRadius: 60,
+                          borderTopRightRadius: 60,
+                          borderColor: "rgba(28,29,35,255)",
+                          top: -70,
+                        }}
+                      />
 
-                  <Text
-                    style={[
-                      styles.size4,
-                      {
-                        textAlign: "left",
-                        color: "white",
-                        padding: 5,
-                        marginTop: 0,
-                      },
-                    ]}
-                  >
-                    {stateObject.info}{" "}
-                  </Text>
+                      <AnimateIcon
+                        style={{
+                          height: 30,
+                          width: 30,
+                          top: -100,
+                          left: 75,
+                          backgroundColor: "rgba(28,29,35,255)",
+                          borderColor: "rgba(56,58,67,255)",
+                          borderWidth: 4,
+                          borderRadius: 20,
+                        }}
+                        iconComponent={
+                          <View
+                            style={{
+                              paddingTop: 2.5,
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <FontAwesome5
+                              name="hat-cowboy-side"
+                              size={12}
+                              color={stateObject ? stateObject.theme : "red"}
+                            />
+                          </View>
+                        }
+                        onPress={editButton}
+                      ></AnimateIcon>
+                    </View>
+                  </View>
                 </Animated.View>
               </View>
-            }
-            visible={inventoryVisible}
-            dismiss={hideInventory}
-          ></MyModal>
-          {
-            //Future swipeable!
-          }
-          <View style={{ flex: 2, flexDirection: "column" }}>
-            <Text
-              style={[
-                styles.size3,
-                {
-                  textAlign: "center",
-                  color: stateObject ? stateObject.theme : "white",
-                  padding: 0,
-                  fontWeight: "800",
-                },
-              ]}
-            >
-              {userObject.name}{" "}
-            </Text>
-            <Text
-              style={[styles.size4, { textAlign: "center", color: "white" }]}
-            >
-              &lt;hero of the day&gt;
-            </Text>
-            {curMsg && curMsg.body ? (
-              <View
+
+              <MyModal
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  backgroundColor: "rgba(28,29,35,255)",
-                }}
-              >
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <AnimateIcon
-                    iconComponent={
-                      <MaterialCommunityIcons
-                        name="gesture-swipe-left"
-                        size={24}
-                        color="rgba(227,229,232,255)"
-                      />
-                    }
-                    onPress={decrementPointer}
-                  />
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <AnimateIcon
-                    iconComponent={
-                      <MaterialCommunityIcons
-                        name="gesture-swipe-right"
-                        size={24}
-                        color="rgba(227,229,232,255)"
-                      />
-                    }
-                    onPress={incrementPointer}
-                  />
-                </View>
-              </View>
-            ) : null}
-            <Text
-              style={[
-                styles.size4,
-                {
-                  flexWrap: "wrap",
-                  color: "rgba(227,229,232,255)",
-                  fontWeight: "700",
-                  textAlign: "left",
-                },
-              ]}
-            >
-              {" "}
-              memories{" "}
-            </Text>
-          </View>
-
-          <Animated.View
-            style={[
-              { borderWidth: 0, flex: 6 },
-              {
-                opacity: flashValue.interpolate({
-                  inputRange: [0, 0.25, 0.5, 0.75, 1],
-                  outputRange: [0, 0.25, 0.5, 0.75, 1],
-                }),
-              },
-            ]}
-          >
-            <View
-              style={[
-                {
+                  flex: 0.75,
                   alignSelf: "center",
-                  padding: 20,
-                  borderRadius: 10,
+                  justifyContent: "center",
+                  borderTopRightRadius: 100,
+                  borderBottomRightRadius: 100,
                   borderWidth: 0,
-                  backgroundColor: "rgba(38,39,47,255)",
-                  shadowColor: "#000",
-                  elevation: 4,
-                  width: "100%",
-                },
-              ]}
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
-            >
-              {curMsg && curMsg.body ? (
-                <Text
-                  style={[
-                    styles.size4,
-                    {
-                      flexWrap: "wrap",
-                      color: "rgba(227,229,232,255)",
-                      fontWeight: "700",
-                      textAlign: "left",
-                    },
-                  ]}
-                >
-                  {" "}
-                  Saved Message{" "}
-                </Text>
-              ) : (
-                <Text
-                  style={[
-                    styles.size4,
-                    {
-                      flexWrap: "wrap",
-                      color: "rgba(227,229,232,255)",
-                      fontWeight: "700",
-                      textAlign: "center",
-                    },
-                  ]}
-                >
-                  {" "}
-                  You have no memories.{" "}
-                </Text>
-              )}
-              {curMsg && curMsg.body ? (
-                <Text
-                  style={[
-                    styles.size4,
-                    {
-                      flexWrap: "wrap",
-                      color: "rgba(211,212,216,255)",
-                      fontWeight: "400",
-                      textAlign: "center",
-                    },
-                    styles.italic,
-                  ]}
-                >
-                  {curMsg.body}
-                </Text>
-              ) : (
-                <Text
-                  style={[
-                    styles.size4,
-                    {
-                      flexWrap: "wrap",
-                      color: "rgba(227,229,232,255)",
-                      fontWeight: "400",
-                      textAlign: "center",
-                    },
-                  ]}
-                >
-                  {" "}
-                  Click the play button below to start{" "}
-                </Text>
-              )}
-              {curMsg && curMsg.body ? (
-                <Text
-                  style={[
-                    styles.size4,
-                    {
-                      flexWrap: "wrap",
-                      color: "rgba(227,229,232,255)",
-                      fontWeight: "700",
-                      textAlign: "left",
-                    },
-                  ]}
-                >
-                  {" "}
-                  Your note{" "}
-                </Text>
-              ) : null}
-              {curMsg && curMsg.body ? (
-                <Text
-                  style={[
-                    styles.size4,
-                    {
-                      flexWrap: "wrap",
-                      color: "rgba(211,212,216,255)",
-                      fontWeight: "400",
-                      textAlign: "center",
-                    },
-                    styles.italic,
-                  ]}
-                >
-                  {curMsg.note}
-                </Text>
-              ) : null}
-
-              {curMsg && curMsg.body ? (
-                <Text
-                  style={[
-                    styles.size4,
-                    {
-                      flexWrap: "wrap",
-                      color: "rgba(227,229,232,255)",
-                      fontWeight: "700",
-                      textAlign: "left",
-                    },
-                  ]}
-                >
-                  {" "}
-                  From{" "}
-                </Text>
-              ) : null}
-
-              {curMsg && curMsg.date ? (
-                <Text
-                  style={[
-                    styles.size4,
-                    {
-                      color: "rgba(211,212,216,255)",
-                      textAlign: "center",
-                      fontWeight: "400",
-                    },
-                  ]}
-                >
-                  {curMsg.author} on {curMsg.date.toDate().toLocaleDateString()}
-                </Text>
-              ) : null}
-
-              <View style={{}}>
-                {curMsg && curMsg.date ? (
-                  <AnimateIcon
-                    onPress={onShare}
-                    iconComponent={
-                      <View
+                }}
+                children={
+                  <View style={{ flex: 1, flexDirection: "row" }}>
+                    <View
+                      style={{
+                        flex: 0.4,
+                        flexDirection: "column",
+                        borderColor: "rgba(28,29,35,255)",
+                        borderRightWidth: 16,
+                        borderRadius: 0,
+                      }}
+                    >
+                      <FlatList
+                        data={inventoryList}
+                        //Shopify Flatlist Does not trigger the re render we need sad
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.path}
+                      />
+                    </View>
+                    <Animated.View
+                      style={[
+                        {
+                          flex: 0.6,
+                          flexDirection: "column",
+                          borderWidth: 0,
+                          padding: 20,
+                        },
+                        {
+                          opacity: flashValue2.interpolate({
+                            inputRange: [
+                              0, 0.25, 0.3, 0.35, 0.5, 0.6, 0.65, 0.75, 1,
+                            ],
+                            outputRange: [
+                              0, 0.25, 0.3, 0.35, 0.5, 0.6, 0.65, 0.75, 1,
+                            ],
+                          }),
+                        },
+                      ]}
+                    >
+                      <Text
                         style={[
+                          styles.size3,
                           {
-                            flexDirection: "row",
-                            alignSelf: "center",
-                            paddingTop: 10,
-                            paddingBottom: 10,
-                            paddingHorizontal: 30,
-                            borderRadius: 20,
-                            backgroundColor: "rgba(56,58,67,255)",
-                            shadowColor: "#000",
-                            margin: 10,
-                            elevation: 4,
+                            textAlign: "center",
+                            color: stateObject ? stateObject.theme : "black",
+                            padding: 0,
+                            fontWeight: "800",
                           },
                         ]}
                       >
-                        <MaterialCommunityIcons
-                          name="export-variant"
-                          size={22}
-                          color="rgba(198,200,206,255)"
-                        />
-                        <Text
-                          style={[
-                            styles.size4,
-                            {
-                              flexWrap: "wrap",
-                              color: "rgba(198,200,206,255)",
-                              fontWeight: "700",
-                              textAlign: "center",
-                            },
-                          ]}
-                        >
-                          {" "}
-                          Export
-                        </Text>
-                      </View>
-                    }
-                  ></AnimateIcon>
-                ) : null}
-              </View>
-            </View>
-          </Animated.View>
-        </View>
+                        {userObject.name}{" "}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.size4,
+                          { textAlign: "center", color: "white" },
+                        ]}
+                      >
+                        &lt;hero of the day&gt;
+                      </Text>
+                      <Text
+                        style={[
+                          styles.size4,
+                          {
+                            textAlign: "left",
+                            color: "white",
+                            textTransform: "uppercase",
+                            marginTop: 6,
+                          },
+                        ]}
+                      >
+                        level 1
+                      </Text>
+                      <Image
+                        source={{ uri: stateObject.url }}
+                        resizeMode="contain"
+                        style={{
+                          backgroundColor: "rgba(28,29,35,1)",
+                          padding: 25,
+                          margin: 16,
+                          width: 125,
+                          alignSelf: "center",
+                          height: 125,
+                          borderRadius: 8,
+                          borderWidth: 2,
+                          borderColor: "white",
+                        }}
+                      />
 
-        {
-          //end
-        }
-
-        <View
-          style={[
-            {
-              flex: 2,
-              flexDirection: "column",
-              backgroundColor: "rgba(28,29,35,255)",
-              padding: 10,
-            },
-          ]}
-        >
-          <View style={{ borderWidth: 0 }}>
-            <AnimateIcon
-              onPress={talkButton}
-              iconComponent={
-                <View
+                      <Text
+                        style={[
+                          styles.size3,
+                          {
+                            color: "white",
+                            padding: 0,
+                            fontWeight: "800",
+                            marginTop: 12,
+                          },
+                        ]}
+                      >
+                        {stateObject.info}{" "}
+                      </Text>
+                    </Animated.View>
+                  </View>
+                }
+                visible={inventoryVisible}
+                dismiss={hideInventory}
+              ></MyModal>
+              {
+                //Future swipeable!
+              }
+              <View style={{ flex: 2, flexDirection: "column" }}>
+                <Text
                   style={[
+                    styles.size3,
                     {
-                      flexDirection: "row",
-                      alignSelf: "center",
-                      paddingTop: 10,
-                      paddingBottom: 10,
-                      paddingHorizontal: 30,
-                      borderRadius: 20,
-                      backgroundColor: "rgba(56,58,67,255)",
-                      shadowColor: "#000",
-                      margin: 10,
-                      elevation: 4,
+                      textAlign: "center",
+                      color: stateObject ? stateObject.theme : "white",
+                      padding: 0,
+                      fontWeight: "800",
                     },
                   ]}
                 >
-                  <MaterialCommunityIcons
-                    name="cards-playing-diamond"
-                    size={64}
-                    color="rgba(227,229,232,255)"
-                  />
-                </View>
-              }
-            ></AnimateIcon>
-          </View>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={queueVisible}
-            onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
-              setQueueVisible(!queueVisible);
-            }}
-          >
-            <View style={styles.centeredView}>
-              <View
+                  {userObject.name}{" "}
+                </Text>
+                <Text
+                  style={[
+                    styles.size4,
+                    { textAlign: "center", color: "white" },
+                  ]}
+                >
+                  &lt;hero of the day&gt;
+                </Text>
+
+                {curMsg && curMsg.body ? (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      backgroundColor: "rgba(28,29,35,255)",
+                    }}
+                  >
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: "row",
+                        justifyContent: "flex-start",
+                      }}
+                    >
+                      <AnimateIcon
+                        iconComponent={
+                          <MaterialCommunityIcons
+                            name="gesture-swipe-left"
+                            size={24}
+                            color="rgba(227,229,232,255)"
+                          />
+                        }
+                        onPress={decrementPointer}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: "row",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <AnimateIcon
+                        iconComponent={
+                          <MaterialCommunityIcons
+                            name="gesture-swipe-right"
+                            size={24}
+                            color="rgba(227,229,232,255)"
+                          />
+                        }
+                        onPress={incrementPointer}
+                      />
+                    </View>
+                  </View>
+                ) : null}
+                <Text
+                  style={[
+                    styles.size4,
+                    {
+                      flexWrap: "wrap",
+                      color: "rgba(227,229,232,255)",
+                      fontWeight: "700",
+                      textAlign: "left",
+                    },
+                  ]}
+                >
+                  {" "}
+                  memories{" "}
+                </Text>
+              </View>
+
+              <Animated.View
                 style={[
-                  styles.modalView,
-                  { backgroundColor: stateObject ? stateObject.theme : "grey" },
+                  { borderWidth: 0, flex: 6 },
+                  {
+                    opacity: flashValue.interpolate({
+                      inputRange: [0, 0.25, 0.5, 0.75, 1],
+                      outputRange: [0, 0.25, 0.5, 0.75, 1],
+                    }),
+                  },
                 ]}
               >
-                <Text style={[styles.modalText, styles.italic]}>
-                  You are in the queue to find a match. Thank you for trying
-                  Jiltd.
-                </Text>
-                <Text style={styles.modalText2}>
-                  Do not deal with personal information.
-                </Text>
-                <Text style={styles.modalText2}>Be respectful.</Text>
-                {/* <Text style={styles.modalText2}>Try your best to help.</Text> */}
-              </View>
-            </View>
-          </Modal>
-          {/**Start inner block */}
-        </View>
-      </View>
+                <View
+                  style={[
+                    {
+                      alignSelf: "center",
+                      padding: 20,
+                      borderRadius: 10,
+                      borderWidth: 0,
+                      backgroundColor: "rgba(38,39,47,255)",
+                      shadowColor: "#000",
+                      elevation: 4,
+                      width: "100%",
+                    },
+                  ]}
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
+                >
+                  {curMsg && curMsg.body ? (
+                    <Text
+                      style={[
+                        styles.size4,
+                        {
+                          flexWrap: "wrap",
+                          color: "rgba(227,229,232,255)",
+                          fontWeight: "700",
+                          textAlign: "left",
+                        },
+                      ]}
+                    >
+                      {" "}
+                      Saved Message{" "}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.size4,
+                        {
+                          flexWrap: "wrap",
+                          color: "rgba(227,229,232,255)",
+                          fontWeight: "700",
+                          textAlign: "center",
+                        },
+                      ]}
+                    >
+                      {" "}
+                      You have no memories.{" "}
+                    </Text>
+                  )}
+                  {curMsg && curMsg.body ? (
+                    <Text
+                      style={[
+                        styles.size4,
+                        {
+                          flexWrap: "wrap",
+                          color: "rgba(211,212,216,255)",
+                          fontWeight: "400",
+                          textAlign: "center",
+                        },
+                        styles.italic,
+                      ]}
+                    >
+                      {curMsg.body}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.size4,
+                        {
+                          flexWrap: "wrap",
+                          color: "rgba(227,229,232,255)",
+                          fontWeight: "400",
+                          textAlign: "center",
+                        },
+                      ]}
+                    >
+                      {" "}
+                      Click the play button below to start{" "}
+                    </Text>
+                  )}
+                  {curMsg && curMsg.body ? (
+                    <Text
+                      style={[
+                        styles.size4,
+                        {
+                          flexWrap: "wrap",
+                          color: "rgba(227,229,232,255)",
+                          fontWeight: "700",
+                          textAlign: "left",
+                        },
+                      ]}
+                    >
+                      {" "}
+                      Your note{" "}
+                    </Text>
+                  ) : null}
+                  {curMsg && curMsg.body ? (
+                    <Text
+                      style={[
+                        styles.size4,
+                        {
+                          flexWrap: "wrap",
+                          color: "rgba(211,212,216,255)",
+                          fontWeight: "400",
+                          textAlign: "center",
+                        },
+                        styles.italic,
+                      ]}
+                    >
+                      {curMsg.note}
+                    </Text>
+                  ) : null}
 
-      <View style={[{ flex: 0.75 }, styles.primaryBGBlack]}>
-        <View
-          style={[
-            { flexDirection: "row" },
-            { justifyContent: "center", alignItems: "center" },
-          ]}
-        >
-          <IconButton
-            onPress={() => console.log("Sorry")}
-            color={"white"}
-          ></IconButton>
+                  {curMsg && curMsg.body ? (
+                    <Text
+                      style={[
+                        styles.size4,
+                        {
+                          flexWrap: "wrap",
+                          color: "rgba(227,229,232,255)",
+                          fontWeight: "700",
+                          textAlign: "left",
+                        },
+                      ]}
+                    >
+                      {" "}
+                      From{" "}
+                    </Text>
+                  ) : null}
+
+                  {curMsg && curMsg.date ? (
+                    <Text
+                      style={[
+                        styles.size4,
+                        {
+                          color: "rgba(211,212,216,255)",
+                          textAlign: "center",
+                          fontWeight: "400",
+                        },
+                      ]}
+                    >
+                      {curMsg.author} on{" "}
+                      {curMsg.date.toDate().toLocaleDateString()}
+                    </Text>
+                  ) : null}
+
+                  <View style={{}}>
+                    {curMsg && curMsg.date ? (
+                      <AnimateIcon
+                        onPress={onShare}
+                        iconComponent={
+                          <View
+                            style={[
+                              {
+                                flexDirection: "row",
+                                alignSelf: "center",
+                                paddingTop: 10,
+                                paddingBottom: 10,
+                                paddingHorizontal: 30,
+                                borderRadius: 20,
+                                backgroundColor: "rgba(56,58,67,255)",
+                                shadowColor: "#000",
+                                margin: 10,
+                                elevation: 4,
+                              },
+                            ]}
+                          >
+                            <MaterialCommunityIcons
+                              name="export-variant"
+                              size={22}
+                              color="rgba(198,200,206,255)"
+                            />
+                            <Text
+                              style={[
+                                styles.size4,
+                                {
+                                  flexWrap: "wrap",
+                                  color: "rgba(198,200,206,255)",
+                                  fontWeight: "700",
+                                  textAlign: "center",
+                                },
+                              ]}
+                            >
+                              {" "}
+                              Export
+                            </Text>
+                          </View>
+                        }
+                      ></AnimateIcon>
+                    ) : null}
+                  </View>
+                </View>
+              </Animated.View>
+            </View>
+
+            {
+              //end
+            }
+
+            <View
+              style={[
+                {
+                  flex: 2,
+                  flexDirection: "column",
+                  backgroundColor: "rgba(28,29,35,255)",
+                  padding: 10,
+                },
+              ]}
+            >
+              <View style={{ borderWidth: 0 }}>
+                <AnimateIcon
+                  onPress={talkButton}
+                  iconComponent={
+                    <View
+                      style={[
+                        {
+                          flexDirection: "row",
+                          alignSelf: "center",
+                          paddingTop: 10,
+                          paddingBottom: 10,
+                          paddingHorizontal: 30,
+                          borderRadius: 20,
+                          backgroundColor: "rgba(56,58,67,255)",
+                          shadowColor: "#000",
+                          margin: 10,
+                          elevation: 4,
+                        },
+                      ]}
+                    >
+                      <MaterialCommunityIcons
+                        name="cards-playing-diamond"
+                        size={64}
+                        color="rgba(227,229,232,255)"
+                      />
+                    </View>
+                  }
+                ></AnimateIcon>
+              </View>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={queueVisible}
+                onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                  setQueueVisible(!queueVisible);
+                }}
+              >
+                <View style={styles.centeredView}>
+                  <View
+                    style={[
+                      styles.modalView,
+                      {
+                        backgroundColor: stateObject
+                          ? stateObject.theme
+                          : "grey",
+                      },
+                    ]}
+                  >
+                    <Text style={[styles.modalText, styles.italic]}>
+                      You are in the queue to find a match. Thank you for trying
+                      Jiltd.
+                    </Text>
+                    <Text style={styles.modalText2}>
+                      Do not deal with personal information.
+                    </Text>
+                    <Text style={styles.modalText2}>Be respectful.</Text>
+                    {/* <Text style={styles.modalText2}>Try your best to help.</Text> */}
+                  </View>
+                </View>
+              </Modal>
+              {/**Start inner block */}
+            </View>
+          </View>
+
+          <View style={[{ flex: 0.75 }, styles.primaryBGBlack]}>
+            <View
+              style={[
+                { flexDirection: "row" },
+                { justifyContent: "center", alignItems: "center" },
+              ]}
+            >
+              <IconButton
+                active={"home"}
+                theme={stateObject.theme}
+                onPress={() => console.log("Sorry")}
+                color={"white"}
+              ></IconButton>
+            </View>
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 };

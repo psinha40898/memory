@@ -81,39 +81,44 @@ const LoginScreen = () => {
     //May have to wrap everything in scrollview or write android specific code
 
     <CustomKeyboardWrapper>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Jiltd</Text>
-        <Image
-          source={{ uri: "https://i.imgur.com/6pxYtPw.png" }}
-          style={{ width: 100, height: 100 }}
-        />
-      </View>
-      <View style={[styles.inputContainer, { width: inputContainerWidth }]}>
-        <TextInput
-          placeholder="email"
-          placeholderTextColor="white"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="password"
-          placeholderTextColor="white"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
-      </View>
+      <View style={[{ width: inputContainerWidth, flex: 1, marginTop: 24 }]}>
+        <View style={[{ justifyContent: "center", flex: 1 }]}>
+          <Text
+            style={[
+              styles.size3,
+              {
+                fontWeight: "700",
+                textAlign: "left",
+                color: "rgba(227,229,232,255)",
+              },
+            ]}
+          >
+            memory.
+          </Text>
 
-      <View>
-        <FlashButton pressFunc={handleLogin} text={"CONTINUE"}></FlashButton>
+          <TextInput
+            placeholder="email"
+            placeholderTextColor="white"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="password"
+            placeholderTextColor="white"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            style={styles.input}
+            secureTextEntry
+          />
 
-        <FlashButton pressFunc={handleSignUp} text={"REGISTER"}></FlashButton>
-        <FlashButton
-          pressFunc={() => navigation.navigate("RegisterScreen")}
-          text={"Reg. Page"}
-        ></FlashButton>
+          <FlashButton pressFunc={handleLogin} text={"LOGIN"}></FlashButton>
+
+          <FlashButton
+            pressFunc={() => navigation.navigate("RegisterScreen")}
+            text={"REGISTER"}
+          ></FlashButton>
+        </View>
       </View>
     </CustomKeyboardWrapper>
   );

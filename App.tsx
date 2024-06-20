@@ -46,7 +46,7 @@ export default function App() {
           name="RatingScreen"
           component={RatingScreen}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerShown: false }}
           name="RegisterScreen"
           component={RegisterScreen}

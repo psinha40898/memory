@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#070707",
-    justifyContent: "center",
+    flex: 4,
+    flexDirection: "column",
+    backgroundColor: "rgba(28,29,35,255)",
     alignItems: "center",
+    justifyContent: "center",
   },
   dropDown: {
     backgroundColor: "rgba(204, 41, 54, .85)",
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "rgba(49,50,59,255)",
-    color: "rgba(120,123,135,255)",
+    color: "white",
     fontWeight: "100",
     paddingHorizontal: 20,
     paddingVertical: 15,
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 64,
-    color: "rgba(204, 41, 54, 1)",
+    color: "white",
     fontWeight: "100",
   },
   centeredView: {
