@@ -112,11 +112,11 @@ const LoginScreen = () => {
             secureTextEntry
           />
 
-          <FlashButton pressFunc={handleLogin} text={"LOGIN"}></FlashButton>
+          <FlashButton pressFunc={handleLogin} text={"SIGN IN"}></FlashButton>
 
           <FlashButton
             pressFunc={() => navigation.navigate("RegisterScreen")}
-            text={"REGISTER"}
+            text={"SIGN UP"}
           ></FlashButton>
         </View>
       </View>

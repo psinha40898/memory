@@ -176,7 +176,7 @@ const RegisterScreen = () => {
         />
 
         <TextInput
-          placeholder="displayName"
+          placeholder="username"
           placeholderTextColor="white"
           value={displayName}
           onChangeText={(text) => setDName(text)}

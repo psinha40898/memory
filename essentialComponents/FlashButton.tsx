@@ -5,13 +5,24 @@ import {
   Animated,
   StyleSheet,
   Text,
+  GestureResponderEvent,
 } from "react-native";
 /**
  * FlashButton.tsx
  * React.Animation
  * An animated view wrapped inside a touchable opacity; button animates on press
  */
-const FlashButton = ({ pressFunc, text }) => {
+interface FlashButtonProps {
+  pressFunc: (event: GestureResponderEvent) => void;
+  text: string;
+}
+
+/**
+ * FlashButton.tsx
+ * React.Animation
+ * An animated view wrapped inside a touchable opacity; button animates on press
+ */
+const FlashButton: React.FC<FlashButtonProps> = ({ pressFunc, text }) => {
   const [animation] = useState(new Animated.Value(1));
 
   const handlePressIn = () => {
@@ -63,8 +74,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "rgba(227,229,232,0.75)",
-    fontWeight: "400",
-    fontSize: 12,
+    fontWeight: "600",
+    fontSize: 14,
     textAlign: "center",
   },
 });

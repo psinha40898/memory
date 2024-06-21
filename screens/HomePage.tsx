@@ -71,6 +71,7 @@ interface UserObject {
   name: string;
   inventory: InventoryItem[];
   saves: SavedObject[];
+  rewards: string[];
 }
 
 interface StateObject {
@@ -91,6 +92,7 @@ const HomePage = () => {
     name: "",
     inventory: [],
     saves: [],
+    rewards: [],
   });
 
   const [loading, setLoading] = useState(true);
@@ -172,7 +174,18 @@ const HomePage = () => {
     setTouchEnd(e.nativeEvent.touches[0].pageX);
     setTouchEndY(e.nativeEvent.touches[0].pageY);
   };
+  const setPointer = (val: number) => {
+    if ((val > userObject.saves.length -1) || (val < 0))
+      {
+        console.log("error");
+        return;
+      }
+      pointer.current = val;
+      startFlashAnimation();
+      setMsg(userObject.saves[pointer.current]);
+      return;
 
+  }
   const incrementPointer = () => {
     if (pointer.current === userObject.saves.length - 1) {
       pointer.current = 0;
@@ -189,7 +202,7 @@ const HomePage = () => {
 
   const decrementPointer = () => {
     if (pointer.current === 0) {
-      pointer.current = 0;
+      pointer.current = userObject.saves.length-1;
       startFlashAnimation();
       setMsg(userObject.saves[pointer.current]);
       return;
@@ -348,10 +361,10 @@ const HomePage = () => {
 
   //useEffects
 
-  /** Init useEffect
-   * TODO: Needs to be configured to load the first item of the user's inventory, whatever it is
-   * or
-   *  Load a default image until countries changes (loading image), then countries loads and the next useEffect is called
+  /** useEffect for react-navigation focus paradigm
+   * useFocusEffect is provided by react-navigation
+   * It runs every time the screen component is in focus
+   * and returns cleanup for out of focus
    */
   useFocusEffect(
     React.useCallback(() => {
@@ -379,14 +392,12 @@ const HomePage = () => {
             const inventoryData = clientSnap?.data()?.inventory;
             const savesData = clientSnap?.data()?.saves;
             const userName = clientSnap?.data()?.displayName;
-            //setSaves(savesData);
-            //setInventory(inventoryData);
-            //setName(userName);
-            //
+            const rewardsData = clientSnap?.data()?.rewards;
             setUser({
               name: userName,
               inventory: inventoryData,
               saves: savesData,
+              rewards: rewardsData
             });
           } else {
             console.log("Null userID?");
@@ -566,7 +577,7 @@ const HomePage = () => {
             {
               //start}
             }
-            <View style={[{ flex: 8, flexDirection: "column", padding: 10 }]}>
+            <View style={[{ flex: 8, flexDirection: "column", padding: 10}]}>
               <View
                 style={{
                   flex: 1,
@@ -698,14 +709,14 @@ const HomePage = () => {
                       >
                         {userObject.name}{" "}
                       </Text>
-                      <Text
+                      {/* <Text
                         style={[
                           styles.size4,
                           { textAlign: "center", color: "white" },
                         ]}
                       >
                         &lt;hero of the day&gt;
-                      </Text>
+                      </Text> */}
                       <Text
                         style={[
                           styles.size4,
@@ -777,55 +788,9 @@ const HomePage = () => {
                     { textAlign: "center", color: "white" },
                   ]}
                 >
-                  &lt;hero of the day&gt;
+                  level 5
                 </Text>
 
-                {curMsg && curMsg.body ? (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      backgroundColor: "rgba(28,29,35,255)",
-                    }}
-                  >
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: "row",
-                        justifyContent: "flex-start",
-                      }}
-                    >
-                      <AnimateIcon
-                        iconComponent={
-                          <MaterialCommunityIcons
-                            name="gesture-swipe-left"
-                            size={24}
-                            color="rgba(227,229,232,255)"
-                          />
-                        }
-                        onPress={decrementPointer}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: "row",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <AnimateIcon
-                        iconComponent={
-                          <MaterialCommunityIcons
-                            name="gesture-swipe-right"
-                            size={24}
-                            color="rgba(227,229,232,255)"
-                          />
-                        }
-                        onPress={incrementPointer}
-                      />
-                    </View>
-                  </View>
-                ) : null}
                 <Text
                   style={[
                     styles.size4,
@@ -834,6 +799,7 @@ const HomePage = () => {
                       color: "rgba(227,229,232,255)",
                       fontWeight: "700",
                       textAlign: "left",
+                    
                     },
                   ]}
                 >
@@ -1040,11 +1006,40 @@ const HomePage = () => {
                             </Text>
                           </View>
                         }
-                      ></AnimateIcon>
+                      ></AnimateIcon>            
+
                     ) : null}
+                    
                   </View>
+                  
                 </View>
+                {curMsg ? (          
+                    <View style = {{flex:0.5, flexDirection: "row", alignContent: 'center', justifyContent: 'center', alignItems: 'center'}}>
+                    {userObject.saves.map((_, index) => (
+    <TouchableOpacity
+    key={index}
+    style={[
+      {
+        width: 16,
+        height: 12,
+        elevation: 4,
+        shadowColor: "#000",
+        margin: 4,
+      },
+      pointer.current === index
+        ? { backgroundColor: 'rgba(227,229,232,255)' }
+        : { backgroundColor: 'rgba(56,58,67,255)' },
+    ]}
+    onPress={()=>setPointer(index)}
+  >
+    {/* TouchableOpacity needs a child, so we'll use an empty View */}
+    <View style={{ width: '100%', height: '100%' }} />
+  </TouchableOpacity>
+      ))}
+    </View>
+                    ): (null)}
               </Animated.View>
+              
             </View>
 
             {
