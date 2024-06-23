@@ -8,7 +8,7 @@ import {
   GestureResponderEvent,
 } from "react-native";
 import { auth, signOut } from "../Firebase";
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import type { RootStackParamList } from "../App";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -54,33 +54,36 @@ const IconButton: React.FC<IconButtonProps> = ({ color, active, theme }) => {
     }).stop();
   };
 
-  const handSignout = () =>{
+  const handSignout = () => {
     console.log("Ax");
-    signOut(auth).then(() => {
-      console.log("A");
-      navigation.navigate("Login")
-      // Sign-out successful.
-    }).catch((error) => {
-      console.log("A");
-    });
-  }
+    signOut(auth)
+      .then(() => {
+        console.log("A");
+        navigation.navigate("Login");
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        console.log("A");
+      });
+  };
 
   const getColor = (name: string) =>
     active === name ? theme : color || "white";
 
   return (
-    <View style={{ flexDirection: "row", marginLeft: 8,}}>
+    <View style={{ flexDirection: "row", marginLeft: 8 }}>
       <TouchableOpacity
         onPressIn={() => handlePressIn(animatedValue1)}
         onPressOut={() => handlePressOut(animatedValue1)}
         activeOpacity={0.7}
         onPress={handSignout}
       >
-        <Animated.View style={{ transform: [{ scale: animatedValue1 }], padding:4 }}>
+        <Animated.View
+          style={{ transform: [{ scale: animatedValue1 }], padding: 4 }}
+        >
           <SimpleLineIcons name="logout" size={26} color={theme} />
         </Animated.View>
       </TouchableOpacity>
-
     </View>
   );
 };

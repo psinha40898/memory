@@ -31,11 +31,11 @@ interface Props {
   route?: MatchScreenRouteProp;
 }
 interface Item {
-  name: string,
-  path: string,
-  message: string,
-  count: number,
-  theme: string
+  name: string;
+  path: string;
+  message: string;
+  count: number;
+  theme: string;
 }
 
 const SecondRegister: React.FC<Props> = (props) => {
@@ -56,36 +56,27 @@ const SecondRegister: React.FC<Props> = (props) => {
   const [starterB, setB] = useState<string | null>(null);
   const [starterC, setC] = useState<string | null>(null);
   //fetch these objects from db later
-  var objectA = {
-    name: "lost blue pup",
-    count: 1,
-    message: "He's following you.",
-    path: "items/starters/blueDog.webp",
-    theme: "rgba(121, 119, 235, 0.8)",
-  };
-  var objectB = {
-    name: "invincible purple rabbit",
-    count: 1,
-    message: "She's very confident.",
-    path: "items/starters/purpleRabbit.webp",
-    theme: "rgba(206, 99, 205, 0.8)",
-  };
-  var objectC = {
-    name: "great dragon",
-    count: 1,
-    message: "He isn't afraid of you.",
-    path: "items/starters/yellowDragon.webp",
-    theme: "rgba(196,104,23,255)",
-  };
+
+  const fetchStarters = async () => {};
+
   const backButton = async () => {
     navigation.navigate("RegisterScreen");
   };
   const finishButton = async () => {
-    var starter: Item = {  name: "",
+    const docSnap = await getDoc(doc(db, "objects", "starters"));
+    if (docSnap.exists()) {
+      var objectA = docSnap.data().A;
+      var objectB = docSnap.data().B;
+      var objectC = docSnap.data().C;
+    }
+
+    var starter: Item = {
+      name: "",
       path: "",
       message: "",
       count: 0,
-      theme: ""}
+      theme: "",
+    };
     if (dName === "") {
       console.log("DEBUG ERROR NICK EMPTY");
       return;
@@ -104,7 +95,7 @@ const SecondRegister: React.FC<Props> = (props) => {
         {
           displayName: dName,
           email: auth.currentUser?.email,
-          saves:[],
+          saves: [],
           jilt: true,
           rating: 0,
           matchedID: "None",
@@ -128,6 +119,8 @@ const SecondRegister: React.FC<Props> = (props) => {
   useEffect(() => {
     const init = async () => {
       try {
+        const docSnap = await getDoc(doc(db, "objects", "starters"));
+
         const Aref = ref(storage, "items/starters/dogSi.webp");
         const A = await getDownloadURL(Aref);
         const Bref = ref(storage, "items/starters/rabSi.webp");
@@ -265,7 +258,7 @@ const SecondRegister: React.FC<Props> = (props) => {
                     padding: 25,
                     width: 75,
                     height: 75,
-                    borderWidth: active === "A" ? 6 : 2,
+                    borderWidth: active === "C" ? 6 : 2,
                     borderColor: "#e3e5e8",
                     borderRadius: 10,
                   }}

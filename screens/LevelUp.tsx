@@ -11,7 +11,7 @@ import {
   Timestamp,
   updateDoc,
   arrayUnion,
-  setDoc
+  setDoc,
 } from "../Firebase";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
@@ -38,7 +38,7 @@ interface Props {
   route?: LevelUpPropRoute;
 }
 interface Reward {
-  path : string;
+  path: string;
   theme: string;
   name: string;
   count: number;
@@ -67,34 +67,32 @@ const LevelUp: React.FC<Props> = (props) => {
     init();
   }, [urls]);
 
- 
-const pickReward = async (reward: Reward) => {
-if(auth.currentUser?.uid){
-  const userRef = doc(db, 'users', auth.currentUser?.uid);
-  const userSnap = await getDoc(userRef);
+  const pickReward = async (reward: Reward) => {
+    if (auth.currentUser?.uid) {
+      const userRef = doc(db, "users", auth.currentUser?.uid);
+      const userSnap = await getDoc(userRef);
 
-  if (userSnap.exists() && level) {
-    let userData = userSnap.data();
+      if (userSnap.exists() && level) {
+        let userData = userSnap.data();
 
-    if (userData.rewards[level-2] === "") {
-      await updateDoc(userRef, {
-        inventory: arrayUnion(reward)
-      });
+        if (userData.rewards[level - 2] === "") {
+          await updateDoc(userRef, {
+            inventory: arrayUnion(reward),
+          });
+        }
+
+        let newRewards = userData.rewards;
+        newRewards[level - 2] = reward.name;
+
+        await setDoc(userRef, { rewards: newRewards }, { merge: true });
+        console.log("em");
+        navigation.navigate("HomePage");
+      }
+    } else {
+      navigation.navigate("HomePage");
+      return;
     }
-
-    let newRewards = userData.rewards;
-    newRewards[level - 2] = reward.name;
-
-    await setDoc(userRef, { rewards: newRewards }, { merge: true });
-    console.log("em");
-    navigation.navigate("HomePage")
-  }
-}
-else{
-  navigation.navigate("HomePage")
-  return;
-}
-};
+  };
   //ref to rateeID in users
   //snap to rateeID in users
 
@@ -106,53 +104,61 @@ else{
       ]}
     >
       <Text
-          style={[
-            styles.size4,
-            {
-              fontWeight: "700",
+        style={[
+          styles.size4,
+          {
+            fontWeight: "700",
 
-              color: "rgba(227,229,232,255)",
-            },
-          ]}
-        >You're level {level}
-          </Text>
-          <Text
-          style={[
-            styles.size3,
-            {
-              fontWeight: "700",
+            color: "rgba(227,229,232,255)",
+          },
+        ]}
+      >
+        You're level {level}
+      </Text>
+      <Text
+        style={[
+          styles.size3,
+          {
+            fontWeight: "700",
 
-              color: "rgba(227,229,232,255)",
-            },
-          ]}
-        >Pick a reward.
-          </Text>
-        <View style = {{flex:0.5, flexDirection: "row",}}> 
-
+            color: "rgba(227,229,232,255)",
+          },
+        ]}
+      >
+        Pick a reward.
+      </Text>
+      <View style={{ flex: 0.5, flexDirection: "row" }}>
         {objList.map((obj, index) => (
-          
-          <View style = {{flex:1,justifyContent: "center", alignItems: "center"}} key={obj.name}>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            key={obj.name}
+          >
+            {urls[index] ? (
+              <Image
+                source={{ uri: urls[index] }}
+                style={{
+                  width: 115,
+                  height: 135,
+                  borderWidth: 6,
+                  margin: 6,
+                  borderColor: obj.theme,
+                }}
+              />
+            ) : null}
 
-          {urls[index] ? (            <Image
-              source={{ uri: urls[index]}}
-              style={{
-                width: 115,
-                height: 135,
-                borderWidth: 6,
-                margin: 6,
-                borderColor: obj.theme
-              }}
-            />): (null)}
-            
-                    <View style={{ width: "50%" }}>
-          <FlashButton pressFunc={()=>{pickReward(obj)}} text={obj.name} />
-        </View>
+            <View style={{ width: "50%" }}>
+              <FlashButton
+                pressFunc={() => {
+                  pickReward(obj);
+                }}
+                text={obj.name}
+              />
+            </View>
           </View>
 
           // Adjust this line based on how you want to display each object
         ))}
-        </View>
-  
+      </View>
     </SafeAreaView>
   );
 };

@@ -141,9 +141,17 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
     //push to array
     //set array
     //author body date note
-
-    await setDoc(clientUserDocRef, { saves: tempSaves }, { merge: true });
-
+try {
+      
+  await updateDoc(clientUserDocRef, {
+    saves: arrayUnion(newItem)
+});
+hideModal();
+}
+catch(e){
+hideModal();
+  console.log("error");
+}
     // TRY THIS  await updateDoc(clientUserDocRef, {saves: arrayUnion(newItem)})
   };
   const cleanUp = async () => {
@@ -357,23 +365,72 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
         <View style={[{ flex: 10 }]}>
           <MyModal
             style={{
-              borderTopRightRadius: 100,
-              borderBottomRightRadius: 100,
-              borderWidth: 0,
-              flex: 0.25,
+              flex: 1,
+              position: "absolute",
+              top: "33.3333333333%",
               alignSelf: "center",
               justifyContent: "center",
+              alignItems: "center", 
+              padding: 24
             }}
             children={
-              <View>
+              <View
+                style={{
+                  flex:1
+                }}
+              >
                 {selectedItem ? (
                   <View>
-                    <Text>message: {selectedItem.text}</Text>
-                    <Button
-                      title="Save"
-                      color="blue"
-                      onPress={() => addSave(selectedItem)}
-                    />
+                    <View
+                      style={{
+                        width: "100%",
+                        padding: 6,
+                        flex: 1,
+                       
+                      }}
+                    >
+                      <Text
+                        style={[
+                          { fontSize: 32 },
+                          {
+                            fontWeight: "700",
+                            textAlign: "center",
+                            color: "rgba(227,229,232,255)",
+                          },
+                        ]}
+                      >
+                    {`"${selectedItem.text}"`}
+                      </Text>
+                      <Text
+                        style={[
+                          { fontSize: 12 },
+                          {
+                            fontWeight: "700",
+                            textAlign: "left",
+                            color: "rgba(227,229,232,255)",
+                          },
+                        ]}
+                      >
+                        {"from: " + matchName + ""}
+                      </Text>
+                      <Text
+                        style={[
+                          { fontSize: 12 },
+                          {
+                            fontWeight: "700",
+                            textAlign: "left",
+                            color: "rgba(227,229,232,255)",
+                          },
+                        ]}
+                      >
+                        {"date: " + selectedItem.timestamp.toDate() + ""}{" "}
+                      </Text>
+
+             <FlashButton
+                        pressFunc={() => addSave(selectedItem)}
+                        text={"Save Message"}
+                      ></FlashButton>
+                    </View>
                   </View>
                 ) : null}
               </View>

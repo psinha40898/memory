@@ -730,16 +730,16 @@ const HomePage = () => {
                     >
                       <Text
                         style={[
-                          styles.size3,
+                          styles.size4,
                           {
-                            textAlign: "center",
+                            textAlign: "left",
                             color: stateObject ? stateObject.theme : "black",
                             padding: 0,
                             fontWeight: "800",
                           },
                         ]}
                       >
-                        {userObject.name}{" "}
+                        {userObject.name + "'s journal"}{" "}
                       </Text>
                       {/* <Text
                         style={[
@@ -749,19 +749,6 @@ const HomePage = () => {
                       >
                         &lt;hero of the day&gt;
                       </Text> */}
-                      <Text
-                        style={[
-                          styles.size4,
-                          {
-                            textAlign: "left",
-                            color: "white",
-                            textTransform: "uppercase",
-                            marginTop: 6,
-                          },
-                        ]}
-                      >
-                        level 1
-                      </Text>
                       <Image
                         source={{ uri: stateObject.url }}
                         resizeMode="contain"
@@ -789,7 +776,20 @@ const HomePage = () => {
                           },
                         ]}
                       >
-                        {stateObject.info}{" "}
+                        {stateObject.info[0]}{" "}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.size4,
+                          {
+                            color: "white",
+                            padding: 0,
+                            fontWeight: "800",
+                            marginTop: 12,
+                          },
+                        ]}
+                      >
+                        {stateObject.info[1]}{" "}
                       </Text>
                     </Animated.View>
                   </View>
@@ -1157,12 +1157,7 @@ const HomePage = () => {
           </View>
 
           <View style={[{ flex: 0.75 }, styles.primaryBGBlack]}>
-            <View
-              style={[
-                { flexDirection: "row" },
-             
-              ]}
-            >
+            <View style={[{ flexDirection: "row" }]}>
               <IconButton
                 active={"home"}
                 theme={stateObject.theme}
