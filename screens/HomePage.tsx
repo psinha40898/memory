@@ -667,9 +667,9 @@ const HomePage = () => {
                               alignItems: "center",
                             }}
                           >
-                            <FontAwesome5
-                              name="hat-cowboy-side"
-                              size={12}
+                            <MaterialIcons
+                              name="edit"
+                              size={18}
                               color={stateObject ? stateObject.theme : "red"}
                             />
                           </View>
@@ -820,7 +820,7 @@ const HomePage = () => {
                     { textAlign: "center", color: "white" },
                   ]}
                 >
-                  level 5
+                  {userObject.rating}
                 </Text>
 
                 <Text
@@ -1051,12 +1051,24 @@ const HomePage = () => {
                       alignItems: "center",
                     }}
                   >
+                    {/**Todo: get userObject.saves/length divided by 5
+                     *
+                     * make outer loop for i > savesdivided_5
+                     * parent div flexDir col
+                     * flexDir row
+                     * inner loop
+                     * for i till 5
+                     * render userObject.save, renders 5 views inside a flexdirrow
+                     * end inner loop
+                     * render empty View still inside parent but not inside flexDir row
+                     */}
                     {userObject.saves.map((_, index) => (
                       <TouchableOpacity
                         key={index}
                         style={[
                           {
-                            width: 16,
+                            maxWidth: "10%",
+                            minWidth: "1%",
                             height: 12,
                             elevation: 4,
                             shadowColor: "#000",
@@ -1069,7 +1081,6 @@ const HomePage = () => {
                         onPress={() => setPointer(index)}
                       >
                         {/* TouchableOpacity needs a child, so we'll use an empty View */}
-                        <View style={{ width: "100%", height: "100%" }} />
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -1091,35 +1102,35 @@ const HomePage = () => {
                 },
               ]}
             >
-              <View style={{ borderWidth: 0 }}>
-                <AnimateIcon
-                  onPress={talkButton}
-                  iconComponent={
-                    <View
-                      style={[
-                        {
-                          flexDirection: "row",
-                          alignSelf: "center",
-                          paddingTop: 10,
-                          paddingBottom: 10,
-                          paddingHorizontal: 30,
-                          borderRadius: 20,
-                          backgroundColor: "rgba(56,58,67,255)",
-                          shadowColor: "#000",
-                          margin: 10,
-                          elevation: 4,
-                        },
-                      ]}
-                    >
-                      <MaterialCommunityIcons
-                        name="cards-playing-diamond"
-                        size={64}
-                        color="rgba(227,229,232,255)"
-                      />
-                    </View>
-                  }
-                ></AnimateIcon>
-              </View>
+              <AnimateIcon
+                onPress={talkButton}
+                iconComponent={
+                  <View
+                    style={[
+                      {
+                        flexDirection: "row",
+                        alignSelf: "center",
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                        paddingHorizontal: 30,
+                        borderRadius: 20,
+                        backgroundColor: "rgba(56,58,67,255)",
+                        shadowColor: "#000",
+                        margin: 10,
+                        marginBottom: 22,
+                        elevation: 4,
+                      },
+                    ]}
+                  >
+                    <MaterialIcons
+                      name="chat-bubble"
+                      size={64}
+                      color="rgba(227,229,232,255)"
+                    />
+                  </View>
+                }
+              ></AnimateIcon>
+
               <Modal
                 animationType="slide"
                 transparent={true}

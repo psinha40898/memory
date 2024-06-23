@@ -141,17 +141,15 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
     //push to array
     //set array
     //author body date note
-try {
-      
-  await updateDoc(clientUserDocRef, {
-    saves: arrayUnion(newItem)
-});
-hideModal();
-}
-catch(e){
-hideModal();
-  console.log("error");
-}
+    try {
+      await updateDoc(clientUserDocRef, {
+        saves: arrayUnion(newItem),
+      });
+      hideModal();
+    } catch (e) {
+      hideModal();
+      console.log("error");
+    }
     // TRY THIS  await updateDoc(clientUserDocRef, {saves: arrayUnion(newItem)})
   };
   const cleanUp = async () => {
@@ -231,6 +229,8 @@ hideModal();
   const testInput = async () => {
     const tsObject = Timestamp.now();
     const q = query(messagesRef, orderBy("millisecond", "desc"), limit(1));
+    const arraySnap = await getDoc(chatroomDocRef);
+    const newMsgs = arraySnap.data()?.messages;
     const querySnapshot = await getDocs(q);
     var fresh = true;
     if (querySnapshot.size > 0) {
@@ -253,6 +253,17 @@ hideModal();
         realTime: tsObject.toDate(),
         link: fresh,
         key: tsObject.toString() + client_ID,
+      });
+      await updateDoc(chatroomDocRef, {
+        messages: arrayUnion({
+          text: sampleSend,
+          timestamp: tsObject,
+          senderId: client_ID,
+          millisecond: tsObject.toMillis(),
+          realTime: tsObject.toDate(),
+          link: fresh,
+          key: tsObject.toString() + client_ID,
+        }),
       });
       setSample("");
     }
@@ -278,12 +289,23 @@ hideModal();
         if (!chatroomDocSnapshot.exists()) {
         }
 
-        const q = query(messagesRef, orderBy("millisecond", "desc"));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          // Create a copy of the current messages
-          const newMessages = snapshot.docs.map((doc) => doc.data());
-          setMessages(newMessages as Item[]);
+        if (!chatroomDocSnapshot.data()?.messages) {
+          await setDoc(chatroomDocRef, {
+            messages: [],
+          });
+        }
+        const unsubscribe = onSnapshot(chatroomDocRef, (doc) => {
+          const newMessages = doc.data()?.messages;
+          console.log(newMessages);
+          setMessages(newMessages.reverse() as Item[]);
         });
+        // const q = query(messagesRef, orderBy("millisecond", "desc"));
+        // const unsubscribe = onSnapshot(q, (snapshot) => {
+        //   // Create a copy of the current messages
+        //   const newMessages = snapshot.docs.map((doc) => doc.data());
+        //   setMessages(newMessages as Item[]);
+        //   console.log("Listen")
+        // });
 
         return () => {
           if (unsubscribe) {
@@ -370,13 +392,13 @@ hideModal();
               top: "33.3333333333%",
               alignSelf: "center",
               justifyContent: "center",
-              alignItems: "center", 
-              padding: 24
+              alignItems: "center",
+              padding: 24,
             }}
             children={
               <View
                 style={{
-                  flex:1
+                  flex: 1,
                 }}
               >
                 {selectedItem ? (
@@ -386,7 +408,6 @@ hideModal();
                         width: "100%",
                         padding: 6,
                         flex: 1,
-                       
                       }}
                     >
                       <Text
@@ -399,7 +420,7 @@ hideModal();
                           },
                         ]}
                       >
-                    {`"${selectedItem.text}"`}
+                        {`"${selectedItem.text}"`}
                       </Text>
                       <Text
                         style={[
@@ -426,7 +447,7 @@ hideModal();
                         {"date: " + selectedItem.timestamp.toDate() + ""}{" "}
                       </Text>
 
-             <FlashButton
+                      <FlashButton
                         pressFunc={() => addSave(selectedItem)}
                         text={"Save Message"}
                       ></FlashButton>
