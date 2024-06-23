@@ -10,7 +10,6 @@
 
 </ul>
 
-
 <h2>Development Overview</h2>
 <ul>
 <li>Authentication and data storage is handled by Firebase</li>

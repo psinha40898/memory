@@ -72,6 +72,7 @@ interface UserObject {
   inventory: InventoryItem[];
   saves: SavedObject[];
   rewards: string[];
+  rating: number;
 }
 
 interface StateObject {
@@ -93,6 +94,7 @@ const HomePage = () => {
     inventory: [],
     saves: [],
     rewards: [],
+    rating: 0,
   });
 
   const [loading, setLoading] = useState(true);
@@ -175,17 +177,15 @@ const HomePage = () => {
     setTouchEndY(e.nativeEvent.touches[0].pageY);
   };
   const setPointer = (val: number) => {
-    if ((val > userObject.saves.length -1) || (val < 0))
-      {
-        console.log("error");
-        return;
-      }
-      pointer.current = val;
-      startFlashAnimation();
-      setMsg(userObject.saves[pointer.current]);
+    if (val > userObject.saves.length - 1 || val < 0) {
+      console.log("error");
       return;
-
-  }
+    }
+    pointer.current = val;
+    startFlashAnimation();
+    setMsg(userObject.saves[pointer.current]);
+    return;
+  };
   const incrementPointer = () => {
     if (pointer.current === userObject.saves.length - 1) {
       pointer.current = 0;
@@ -195,6 +195,9 @@ const HomePage = () => {
     }
     pointer.current = pointer.current + 1;
     console.log(pointer);
+    console.log(userObject.rating);
+    console.log(userObject.rewards);
+
     startFlashAnimation();
     setMsg(userObject.saves[pointer.current]);
     return;
@@ -202,7 +205,7 @@ const HomePage = () => {
 
   const decrementPointer = () => {
     if (pointer.current === 0) {
-      pointer.current = userObject.saves.length-1;
+      pointer.current = userObject.saves.length - 1;
       startFlashAnimation();
       setMsg(userObject.saves[pointer.current]);
       return;
@@ -307,6 +310,31 @@ const HomePage = () => {
   const hideInventory = () => {
     setInventoryVisible(false);
   };
+
+  const levelHelper = (level: number, selection: string) => {
+    var newUser = userObject;
+    newUser.rewards[level - 1] = selection;
+    setUser(newUser);
+    //fetch object from DB for given level/selection
+    //add object to state inventory
+    //write new userObject back to firestore
+  };
+  const levelUp = async (level: number) => {
+    const docSnap = await getDoc(doc(db, "objects", "level" + level));
+    if (docSnap.exists()) {
+      const objects = docSnap.data().rewards;
+      console.log(objects);
+      navigation.navigate("LevelUp", {
+        objList: objects,
+        levelVal: level,
+      });
+    }
+
+    // navigate to level up screen passing Objectlist and level
+    // After user picks reward, update firebase and send back to this screen
+    // this should update everything
+    //update firebase HERE
+  };
   const exportButton = async () => {
     /** I need to write an export function
      * It should send an email to the user's email
@@ -360,7 +388,6 @@ const HomePage = () => {
   };
 
   //useEffects
-
   /** useEffect for react-navigation focus paradigm
    * useFocusEffect is provided by react-navigation
    * It runs every time the screen component is in focus
@@ -393,12 +420,15 @@ const HomePage = () => {
             const savesData = clientSnap?.data()?.saves;
             const userName = clientSnap?.data()?.displayName;
             const rewardsData = clientSnap?.data()?.rewards;
+            const ratingData = clientSnap?.data()?.rating;
             setUser({
               name: userName,
               inventory: inventoryData,
               saves: savesData,
-              rewards: rewardsData
+              rewards: rewardsData,
+              rating: ratingData,
             });
+            console.log("usefocus");
           } else {
             console.log("Null userID?");
           }
@@ -449,6 +479,8 @@ const HomePage = () => {
         setInventoryList(inventoryListInfo);
         setLoading(false);
       }
+      //check if user leveld to 1
+
       if (userObject.saves.length > 0) {
         setMsg(userObject.saves[0]);
       }
@@ -577,7 +609,7 @@ const HomePage = () => {
             {
               //start}
             }
-            <View style={[{ flex: 8, flexDirection: "column", padding: 10}]}>
+            <View style={[{ flex: 8, flexDirection: "column", padding: 10 }]}>
               <View
                 style={{
                   flex: 1,
@@ -799,7 +831,6 @@ const HomePage = () => {
                       color: "rgba(227,229,232,255)",
                       fontWeight: "700",
                       textAlign: "left",
-                    
                     },
                   ]}
                 >
@@ -1006,40 +1037,44 @@ const HomePage = () => {
                             </Text>
                           </View>
                         }
-                      ></AnimateIcon>            
-
+                      ></AnimateIcon>
                     ) : null}
-                    
                   </View>
-                  
                 </View>
-                {curMsg ? (          
-                    <View style = {{flex:0.5, flexDirection: "row", alignContent: 'center', justifyContent: 'center', alignItems: 'center'}}>
+                {curMsg ? (
+                  <View
+                    style={{
+                      flex: 0.5,
+                      flexDirection: "row",
+                      alignContent: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
                     {userObject.saves.map((_, index) => (
-    <TouchableOpacity
-    key={index}
-    style={[
-      {
-        width: 16,
-        height: 12,
-        elevation: 4,
-        shadowColor: "#000",
-        margin: 4,
-      },
-      pointer.current === index
-        ? { backgroundColor: 'rgba(227,229,232,255)' }
-        : { backgroundColor: 'rgba(56,58,67,255)' },
-    ]}
-    onPress={()=>setPointer(index)}
-  >
-    {/* TouchableOpacity needs a child, so we'll use an empty View */}
-    <View style={{ width: '100%', height: '100%' }} />
-  </TouchableOpacity>
-      ))}
-    </View>
-                    ): (null)}
+                      <TouchableOpacity
+                        key={index}
+                        style={[
+                          {
+                            width: 16,
+                            height: 12,
+                            elevation: 4,
+                            shadowColor: "#000",
+                            margin: 4,
+                          },
+                          pointer.current === index
+                            ? { backgroundColor: "rgba(227,229,232,255)" }
+                            : { backgroundColor: "rgba(56,58,67,255)" },
+                        ]}
+                        onPress={() => setPointer(index)}
+                      >
+                        {/* TouchableOpacity needs a child, so we'll use an empty View */}
+                        <View style={{ width: "100%", height: "100%" }} />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ) : null}
               </Animated.View>
-              
             </View>
 
             {
@@ -1125,7 +1160,7 @@ const HomePage = () => {
             <View
               style={[
                 { flexDirection: "row" },
-                { justifyContent: "center", alignItems: "center" },
+             
               ]}
             >
               <IconButton

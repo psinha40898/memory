@@ -30,6 +30,13 @@ type MatchScreenRouteProp = RouteProp<RootStackParamList, "SecondRegister">;
 interface Props {
   route?: MatchScreenRouteProp;
 }
+interface Item {
+  name: string,
+  path: string,
+  message: string,
+  count: number,
+  theme: string
+}
 
 const SecondRegister: React.FC<Props> = (props) => {
   const dName = props.route?.params.name;
@@ -74,7 +81,11 @@ const SecondRegister: React.FC<Props> = (props) => {
     navigation.navigate("RegisterScreen");
   };
   const finishButton = async () => {
-    var starter = {};
+    var starter: Item = {  name: "",
+      path: "",
+      message: "",
+      count: 0,
+      theme: ""}
     if (dName === "") {
       console.log("DEBUG ERROR NICK EMPTY");
       return;
@@ -93,6 +104,7 @@ const SecondRegister: React.FC<Props> = (props) => {
         {
           displayName: dName,
           email: auth.currentUser?.email,
+          saves:[],
           jilt: true,
           rating: 0,
           matchedID: "None",

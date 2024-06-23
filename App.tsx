@@ -6,13 +6,22 @@ import MatchScreen from "./screens/MatchScreen";
 import RatingScreen from "./screens/RatingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import SecondRegister from "./screens/SecondRegister";
+import LevelUp from "./screens/LevelUp";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Auth } from "./Firebase";
+interface item {
+  name: string;
+  message: string;
+  count: number;
+  theme: string;
+  path: string;
+}
 export type RootStackParamList = {
   Login: undefined;
   HomePage: undefined;
   MatchScreen: { match: string; self: string; theme: string; path: string };
+  LevelUp: { objList: item[]; levelVal: number };
   RatingScreen: { ratee: string };
   RegisterScreen: undefined;
   SecondRegister: { name: string };
@@ -45,6 +54,11 @@ export default function App() {
           options={{ headerShown: false }}
           name="RatingScreen"
           component={RatingScreen}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="LevelUp"
+          component={LevelUp}
         />
         <Stack.Screen
           options={{ headerShown: false }}
