@@ -98,6 +98,7 @@ const SecondRegister: React.FC<Props> = (props) => {
           saves: [],
           jilt: true,
           rating: 0,
+          rewards: [],
           matchedID: "None",
           inventory: [starter],
           new: true,

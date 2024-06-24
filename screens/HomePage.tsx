@@ -481,7 +481,9 @@ const HomePage = () => {
       }
       //check if user leveld to 1
       if (userObject.rating > 9) {
-        levelUp(2);
+        if (!userObject.rewards[0]){
+          levelUp(2);
+        }
       }
       if (userObject.saves.length > 0) {
         setMsg(userObject.saves[0]);
@@ -815,14 +817,6 @@ const HomePage = () => {
                   ]}
                 >
                   {userObject.name}{" "}
-                </Text>
-                <Text
-                  style={[
-                    styles.size4,
-                    { textAlign: "center", color: "white" },
-                  ]}
-                >
-                  {userObject.rating}
                 </Text>
 
                 <Text

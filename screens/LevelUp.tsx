@@ -75,7 +75,7 @@ const LevelUp: React.FC<Props> = (props) => {
       if (userSnap.exists() && level) {
         let userData = userSnap.data();
 
-        if (userData.rewards[level - 2] === "") {
+        if (userData.rewards[level - 2] === "" || !userData.rewards[level-2]) {
           await updateDoc(userRef, {
             inventory: arrayUnion(reward),
           });
@@ -113,7 +113,7 @@ const LevelUp: React.FC<Props> = (props) => {
           },
         ]}
       >
-        You're level {level}
+        You were commended.
       </Text>
       <Text
         style={[
