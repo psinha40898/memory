@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "cleanMemory",
-    "slug": "cleanMemory",
+    "name": "memory",
+    "slug": "memory",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
