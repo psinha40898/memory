@@ -480,7 +480,9 @@ const HomePage = () => {
         setLoading(false);
       }
       //check if user leveld to 1
-
+      if (userObject.rating > 9) {
+        levelUp(2);
+      }
       if (userObject.saves.length > 0) {
         setMsg(userObject.saves[0]);
       }

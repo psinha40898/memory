@@ -22,7 +22,7 @@ export type RootStackParamList = {
   HomePage: undefined;
   MatchScreen: { match: string; self: string; theme: string; path: string };
   LevelUp: { objList: item[]; levelVal: number };
-  RatingScreen: { ratee: string };
+  RatingScreen: { ratee: string};
   RegisterScreen: undefined;
   SecondRegister: { name: string };
   // Cmen: undefined;
