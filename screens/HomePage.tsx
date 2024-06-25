@@ -611,7 +611,16 @@ const HomePage = () => {
                     { color: "rgba(253,254,253,255)" },
                   ]}
                 >
-                  memory.
+                  memory 
+                </Text>
+                <Text
+                  style={[
+                    styles.bold,
+                    styles.size5,
+                    { color: "rgba(253,254,253,255)" },
+                  ]}
+                >
+                  1.00 
                 </Text>
 
                 <Text

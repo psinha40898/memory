@@ -392,7 +392,6 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
             style={{
               flex: 1,
               position: "absolute",
-              top: "33.3333333333%",
               alignSelf: "center",
               justifyContent: "center",
               alignItems: "center",
@@ -454,7 +453,6 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
             placeholder="Sample Note"
             placeholderTextColor="white"
             value={note}
-            defaultValue="Sample Note"
             onChangeText={(text) => setNote(text)}
             style={styles.input}
           />
