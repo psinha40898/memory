@@ -1,4 +1,4 @@
-rootProject.name = 'cleanMemory'
+rootProject.name = 'memory'
 
 dependencyResolutionManagement {
   versionCatalogs {

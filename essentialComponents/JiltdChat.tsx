@@ -121,7 +121,7 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
   //console.log("USER ID:", client_ID, "MATCHee ID:", match_ID, "THEME:", theme, "UNAME:", clientName, "MNAME:", matchName, "MTHEME:", matchTheme, "Path:", path, "mp:", matchPath)
 
   const [isVisible, setIsVisible] = useState(false);
-  const [note, setNote] = useState("Sample Note");
+  const [note, setNote] = useState("");
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const clientUserDocRef = doc(db, "users", client_ID);
@@ -146,9 +146,11 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
       await updateDoc(clientUserDocRef, {
         saves: arrayUnion(newItem),
       });
+      setNote("");
       hideModal();
     } catch (e) {
       hideModal();
+      setNote("");
       console.log("error");
     }
     // TRY THIS  await updateDoc(clientUserDocRef, {saves: arrayUnion(newItem)})
