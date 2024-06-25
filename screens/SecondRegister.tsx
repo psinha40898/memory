@@ -82,12 +82,13 @@ const SecondRegister: React.FC<Props> = (props) => {
       return;
     }
     if (active === "A") {
-      starter = objectA;
-    } else if (active === "B") {
-      starter = objectB;
-    } else if (active === "C") {
+      starter = objectA;}
+     if (active === "B") {
+      starter = objectB;}
+    if (active === "C") {
       starter = objectC;
     }
+
     try {
       console.log("registered with default stats");
       await setDoc(

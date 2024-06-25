@@ -36,6 +36,8 @@ import {
   doc,
   getDoc,
   Timestamp,
+  setDoc,
+  updateDoc
 } from "../Firebase";
 import AnimateIcon from "../essentialComponents/AnimateIcon";
 // import Dropdown from 'react-native-input-select';
@@ -98,6 +100,7 @@ const HomePage = () => {
   });
 
   const [loading, setLoading] = useState(true);
+  const [clientIndex, setIndex] = useState(0);
 
   //State that changes every time the user picks a different item
   const [stateObject, setState] = useState<StateObject>({
@@ -254,6 +257,7 @@ const HomePage = () => {
     try {
       const storageRef = ref(storage, path);
       const URL = await getDownloadURL(storageRef);
+      setIndex(inventoryList.findIndex(obj => obj.path === path));
       setState({ theme: color, path: path, url: URL, info: story });
     } catch (e) {
       console.log(e);
@@ -393,15 +397,17 @@ const HomePage = () => {
    * It runs every time the screen component is in focus
    * and returns cleanup for out of focus
    */
+  const writeIndex = async () => {
+
+  }
   useFocusEffect(
     React.useCallback(() => {
       const init = async () => {
         try {
           setLoading(true);
-          //Set active image to placeholder!
+          // Set active image to placeholder!
           const storageRef = ref(storage, "items/black.webp");
           const URL = await getDownloadURL(storageRef);
-          // set default state
           // set default state
           setState({
             theme: "black",
@@ -409,10 +415,8 @@ const HomePage = () => {
             url: URL,
             info: [""],
           });
-          // set default state
-          // set default state
-
-          //Retrieve inventory
+  
+          // Retrieve inventory
           if (userID) {
             const clientUserDocRefMain = doc(db, "users", userID);
             const clientSnap = await getDoc(clientUserDocRefMain);
@@ -421,6 +425,7 @@ const HomePage = () => {
             const userName = clientSnap?.data()?.displayName;
             const rewardsData = clientSnap?.data()?.rewards;
             const ratingData = clientSnap?.data()?.rating;
+            const curIndex = clientSnap?.data()?.index;
             setUser({
               name: userName,
               inventory: inventoryData,
@@ -428,16 +433,35 @@ const HomePage = () => {
               rewards: rewardsData,
               rating: ratingData,
             });
+            setIndex(curIndex);
             console.log("usefocus");
           } else {
             console.log("Null userID?");
           }
         } catch (e) {
           console.log(e);
+        } finally {
         }
       };
+  
       init();
-    }, []),
+  
+      return () => {
+        //update
+        if (userID){
+          const clientUserDocRefMain = doc(db, 'users', userID);
+          updateDoc(clientUserDocRefMain, {
+            index: clientIndex,
+            // Add any other fields you need to update
+          }).then(() => {
+            console.log('Document successfully updated on unmount');
+          }).catch((error) => {
+            console.error('Error updating document on unmount: ', error);
+          });
+        }
+
+      };
+    }, [userID])
   );
 
   /** Updates states when inventory is loaded (changes only once). Add setImage here
@@ -470,10 +494,10 @@ const HomePage = () => {
         //lets grab URLs from paths and put them in an array
         // set the state here!// set the state here!
         setState({
-          theme: userObject.inventory[0].theme,
-          path: userObject.inventory[0].path,
-          url: inventoryListInfo[0].url,
-          info: userObject.inventory[0].message,
+          theme: userObject.inventory[clientIndex].theme,
+          path: userObject.inventory[clientIndex].path,
+          url: inventoryListInfo[clientIndex].url,
+          info: userObject.inventory[clientIndex].message,
         });
         // set the state here!// set the state here!
         setInventoryList(inventoryListInfo);
