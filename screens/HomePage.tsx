@@ -416,7 +416,7 @@ const HomePage = () => {
             info: [""],
           });
   
-          // Retrieve inventory
+          // Retrieve inventorys
           if (userID) {
             const clientUserDocRefMain = doc(db, "users", userID);
             const clientSnap = await getDoc(clientUserDocRefMain);
