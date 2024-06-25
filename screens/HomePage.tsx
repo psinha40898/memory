@@ -53,6 +53,7 @@ interface ImageData {
   path: string;
   selected: boolean;
   theme: string[];
+  name: string;
 }
 interface InventoryItem {
   count: number;
@@ -78,6 +79,7 @@ interface UserObject {
 }
 
 interface StateObject {
+  name: string;
   theme: string;
   path: string;
   url: string | undefined;
@@ -104,6 +106,7 @@ const HomePage = () => {
 
   //State that changes every time the user picks a different item
   const [stateObject, setState] = useState<StateObject>({
+    name: "",
     theme: "rgba(216, 151, 158, 1)",
     path: "",
     url: undefined,
@@ -248,6 +251,7 @@ const HomePage = () => {
    * @param
    */
   const updateDisplay = async (
+    itemName:string,
     path: string,
     color: string,
     story: string[],
@@ -258,7 +262,7 @@ const HomePage = () => {
       const storageRef = ref(storage, path);
       const URL = await getDownloadURL(storageRef);
       setIndex(inventoryList.findIndex(obj => obj.path === path));
-      setState({ theme: color, path: path, url: URL, info: story });
+      setState({ name: itemName, theme: color, path: path, url: URL, info: story });
     } catch (e) {
       console.log(e);
     }
@@ -286,7 +290,7 @@ const HomePage = () => {
           />
         </View>
       }
-      onPress={() => updateDisplay(item.path, item.theme[0], item.message)}
+      onPress={() => updateDisplay(item.name, item.path, item.theme[0], item.message)}
     ></AnimateIcon>
   );
 
@@ -410,6 +414,7 @@ const HomePage = () => {
           const URL = await getDownloadURL(storageRef);
           // set default state
           setState({
+            name: "",
             theme: "black",
             path: "",
             url: URL,
@@ -480,6 +485,7 @@ const HomePage = () => {
             const url = await getDownloadURL(storageRef);
 
             inventoryListInfo.push({
+              name: item.name,
               url: url,
               path: item.path,
               message: item.message,
@@ -494,6 +500,7 @@ const HomePage = () => {
         //lets grab URLs from paths and put them in an array
         // set the state here!// set the state here!
         setState({
+          name: userObject.inventory[clientIndex].name,
           theme: userObject.inventory[clientIndex].theme,
           path: userObject.inventory[clientIndex].path,
           url: inventoryListInfo[clientIndex].url,
@@ -758,7 +765,7 @@ const HomePage = () => {
                     >
                       <Text
                         style={[
-                          styles.size4,
+                          styles.size5,
                           {
                             textAlign: "left",
                             color: stateObject ? stateObject.theme : "black",
@@ -777,6 +784,21 @@ const HomePage = () => {
                       >
                         &lt;hero of the day&gt;
                       </Text> */}
+                                    <Text
+                        style={[
+                          styles.size4,
+                          {
+                            textAlign: "center",
+                            textTransform: "uppercase",
+                            color: stateObject.theme,
+                            padding: 0,
+                            fontWeight: "800",
+                            marginTop: 12,
+                          },
+                        ]}
+                      >
+                        {stateObject.name}{" "}
+                      </Text>
                       <Image
                         source={{ uri: stateObject.url }}
                         resizeMode="contain"
@@ -788,14 +810,15 @@ const HomePage = () => {
                           alignSelf: "center",
                           height: 125,
                           borderRadius: 8,
-                          borderWidth: 2,
+                          borderWidth: 4,
                           borderColor: "white",
                         }}
                       />
-
+                  
+                  
                       <Text
                         style={[
-                          styles.size3,
+                          styles.size4,
                           {
                             color: "white",
                             padding: 0,
@@ -811,10 +834,14 @@ const HomePage = () => {
                           styles.size4,
                           {
                             color: "white",
+                            textAlign: "center",
                             padding: 0,
-                            fontWeight: "800",
+                            fontWeight: "400",
                             marginTop: 12,
+                            fontStyle: "italic"
+                            
                           },
+                          
                         ]}
                       >
                         {stateObject.info[1]}{" "}

@@ -121,6 +121,7 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
   //console.log("USER ID:", client_ID, "MATCHee ID:", match_ID, "THEME:", theme, "UNAME:", clientName, "MNAME:", matchName, "MTHEME:", matchTheme, "Path:", path, "mp:", matchPath)
 
   const [isVisible, setIsVisible] = useState(false);
+  const [note, setNote] = useState("Sample Note");
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const clientUserDocRef = doc(db, "users", client_ID);
@@ -133,7 +134,7 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
       author: matchName,
       body: item.text,
       date: item.timestamp,
-      note: "Sample Note", // Additional field example
+      note: note, // Additional field example
     };
     tempSaves.push(newItem);
     console.log(tempSaves);
@@ -447,10 +448,19 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
                         {"date: " + selectedItem.timestamp.toDate() + ""}{" "}
                       </Text>
 
+                      <TextInput
+            placeholder="Sample Note"
+            placeholderTextColor="white"
+            value={note}
+            defaultValue="Sample Note"
+            onChangeText={(text) => setNote(text)}
+            style={styles.input}
+          />
                       <FlashButton
                         pressFunc={() => addSave(selectedItem)}
                         text={"Save Message"}
                       ></FlashButton>
+
                     </View>
                   </View>
                 ) : null}
@@ -639,6 +649,7 @@ const JiltdChat: React.FC<JiltdChatProps> = ({
               borderTopWidth: 1,
               borderColor: "rgba(199,200,205,0.75)",
               padding: 5,
+              marginTop: 10
             },
           ]}
         >

@@ -27,6 +27,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  Alert
 } from "react-native";
 import { ImageSourcePropType } from "react-native";
 import FlashButton from "../essentialComponents/FlashButton";
@@ -46,6 +47,7 @@ interface Reward {
 }
 const LevelUp: React.FC<Props> = (props) => {
   const [urls, setUrls] = useState<(string | undefined)[]>([]);
+  const [active, setActive] = useState<(Reward)>({path: "Empty", theme: "Empty", name: "Empty", count: 0, message: "Empty"})
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const level = props.route?.params.levelVal;
@@ -68,6 +70,17 @@ const LevelUp: React.FC<Props> = (props) => {
   }, [urls]);
 
   const pickReward = async (reward: Reward) => {
+    if (reward.name === "Empty"){
+      Alert.alert('Reward available', 'You need to pick a reward!', [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ]);
+      return;
+    }
     if (auth.currentUser?.uid) {
       const userRef = doc(db, "users", auth.currentUser?.uid);
       const userSnap = await getDoc(userRef);
@@ -129,9 +142,10 @@ const LevelUp: React.FC<Props> = (props) => {
       </Text>
       <View style={{ flex: 0.5, flexDirection: "row" }}>
         {objList.map((obj, index) => (
-          <View
+          <TouchableOpacity
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
             key={obj.name}
+            onPress={()=>setActive(obj)}
           >
             {urls[index] ? (
               <Image
@@ -139,26 +153,47 @@ const LevelUp: React.FC<Props> = (props) => {
                 style={{
                   width: 115,
                   height: 135,
-                  borderWidth: 6,
+                  borderWidth: active === obj ? 8 : 4,
                   margin: 6,
                   borderColor: obj.theme,
                 }}
               />
             ) : null}
 
-            <View style={{ width: "50%" }}>
-              <FlashButton
-                pressFunc={() => {
-                  pickReward(obj);
-                }}
-                text={obj.name}
-              />
+            <View style={{ width: "100%" }}>
+            <Text
+        style={[
+          
+          {
+            marginTop: 12,
+            fontWeight: active === obj ? "700" : "500",
+            fontSize: active === obj ? 18 : 14,
+            textAlign: "center",
+            color: obj.theme,
+          },
+        ]}
+      >
+        {obj.name}
+      </Text>
             </View>
-          </View>
+          </TouchableOpacity>
 
           // Adjust this line based on how you want to display each object
         ))}
+       
       </View>
+  <View style = {{flex: 0.25, flexDirection: "row"}}>
+    <View style = {{width: "50%"}}>
+    <FlashButton
+                pressFunc={() => {
+                (pickReward(active))
+                }}
+                text={"Submit"}
+              />
+    </View>
+
+
+  </View>
     </SafeAreaView>
   );
 };
