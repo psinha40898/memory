@@ -1209,7 +1209,7 @@ const HomePage = () => {
                   >
                     <Text style={[styles.modalText, styles.italic]}>
                       You are in the queue to find a match. Thank you for trying
-                      Jiltd.
+                      memory.
                     </Text>
                     <Text style={styles.modalText2}>
                       Do not deal with personal information.
