@@ -523,6 +523,7 @@ const HomePage = () => {
     displayDefaults();
   }, [userObject]);
 
+  //You might not need an effect
   useEffect(() => {
     // Start flash animation when component mounts
     startFlashAnimation();
