@@ -1,7 +1,7 @@
 <h1>memory</h1>
 
 <h2>An answer to the negative aspects of Omegle</h2>
-<img src="https://i.imgur.com/kkxHEFP.gif" alt="Descriptive text">
+<img src="https://i.imgur.com/GUEdkmE.gif" alt="Descriptive text">
 <ul>
 <li>Built with React Native through Expo</li>
 <li>Fully Type Safe</li>
