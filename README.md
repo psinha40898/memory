@@ -1,7 +1,11 @@
 <h1>memory</h1>
 
+
+https://github.com/user-attachments/assets/809625e3-7e01-4599-b66a-6261d24cab28
+
+
 <h2>An answer to the negative aspects of Omegle</h2>
-<img src="https://i.imgur.com/lYptNLE.gif" alt="Descriptive text">
+
 <ul>
 <li>Built with React Native through Expo</li>
 <li>Fully Type Safe</li>
