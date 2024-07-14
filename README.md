@@ -1,10 +1,10 @@
 <h1>memory</h1>
+https://github.com/user-attachments/assets/bdaba1dc-9d74-460e-8d4c-0ba827058c3a
 
 <h2>An answer to the negative aspects of Omegle</h2>
 
 
 
-https://github.com/user-attachments/assets/bdaba1dc-9d74-460e-8d4c-0ba827058c3a
 
 
 
